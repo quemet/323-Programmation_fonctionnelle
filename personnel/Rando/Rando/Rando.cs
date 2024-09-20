@@ -1,4 +1,5 @@
 using Aspose.Gis;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Rando
 {
@@ -7,18 +8,55 @@ namespace Rando
         public double _x { get; set; }
         public double _y { get; set; }
         public double _z { get; set; }
-        public Points(double x, double y, double z)
+        public double _distance { get; set; }
+        public List<Points> _points { get; set; }
+
+        public Points(double x = 1, double y = 1, double z = 1)
         {
             _x = x;
             _y = y;
             _z = z;
+            _points = new List<Points>();
+        }
+
+        public void CalculateDistance()
+        {
+            /*
+            double lon1 = toRadians(lon1);
+            double lon2 = toRadians(lon2);
+
+            double lat1 = toRadians(lat1);
+            double lat2 = toRadians(lat2);
+ 
+            double dlon = lon2 - lon1; 
+            double dlat = lat2 - lat1;
+            double a = Math.Pow(Math.Sin(dlat / 2), 2) + Math.Cos(lat1) * Math.Cos(lat2) * Math.Pow(Math.Sin(dlon / 2),2);
+            
+            double c = 2 * Math.Asin(Math.Sqrt(a));
+ 
+            double r = 6371;
+
+            return (c * r);
+             */
+
+
+
+            /*double y = _points.Aggregate(new Points(), (p, next) =>
+            {
+                return new Points() { 
+                    _x = next._x, 
+                    _y = next._y, 
+                    _z = next._z, 
+                    _distance = Math.Sqrt(Math.Pow((next._x - p._x), 2) + Math.Pow((next._y - p._y), 2) + Math.Pow((next._z - p._z), 2)) + p._distance
+                };
+            }, p => p._distance);
+            MessageBox.Show((y*3.78103356).ToString());*/
         }
     }
 
     public partial class Rando : Form
     {
-        List<Points> poi = new List<Points>();
-
+        public static Points p = new Points();
         public Rando()
         {
             InitializeComponent();
@@ -44,30 +82,19 @@ namespace Rando
                                 string attributeName = $"name__{i}__{j}";
                                 if (!(layer.Attributes.Contains(attributeName) && feature.IsValueSet(attributeName)))
                                 {
-                                    poi.Add(new Points(segment[j].X, segment[j].Y, segment[j].Z));
+                                    p._points.Add(new Points(segment[j].X, segment[j].Y, segment[j].Z));
                                 }
                             }
                         }
                     }
                 }
             }
+            p.CalculateDistance();
         }
 
         private void Rando_Form_Paint(object sender, PaintEventArgs e)
         {
-            Pen myPen = new Pen(Color.Red);
-            myPen.Width = 2;
 
-            Point[] p = new Point[poi.Count];
-
-            for(int i = 0; i < p.Length; i++)
-            {
-                p[i] = new Point((int)poi[i]._x, (int)poi[i]._y);
-            }
-
-            Point[] points = new Point[4] { new Point(30,50), new Point(50,10), new Point(80,50), new Point(111,400) };
-
-            this.CreateGraphics().DrawLines(myPen, points);
         }
     }
 }
