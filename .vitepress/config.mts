@@ -32,7 +32,7 @@ export default defineConfig({
         collapsed : true,
         items: glob.sync('exos/*/README.md',{posix:true})
           .map(f => '/' + f)
-          .map((file) => ({ text: `${file.split("/")[2]}`, link: `${file}` })).reverse()
+          .map((file) => ({ text: `${file.split("/")[2]}`, link: `${file.replace("README","index")}` })).reverse()
       }
       
     ],
@@ -49,7 +49,7 @@ export default defineConfig({
   
   rewrites: {
     'README.md': 'index.md',
-    '(.*)/README.md': '(.*)/index.md'
+    '(.*)/README.md': '(.*)/index.md',
   },
   //disable next/previous
   transformPageData(pageData) {
