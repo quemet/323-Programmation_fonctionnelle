@@ -2,12 +2,15 @@
 
 Ces exercices ont pour but de vous apprendre à repérer les variables mutables et à trouver des solutions dans lesquelles on ne se sert que de variables immutables
 
-## Maximum
+## 1. Maximum
 
 Dans un programme de jeu de carte qui se joue à 4 joueur, on a décidé que le joueur le plus âgé serait celui qui commence.
 
 On sera donc tenté d'écrire le code suivant:
 
+<details>
+<summary>Afficher/Masquer le code</summary>
+    
 ```csharp
 // 4 players
 List<Player> players = new List<Player>()
@@ -52,17 +55,24 @@ public class Player
     public int Age => _age;
 }
 ```
+
+</details>
+
 ### TODO
 1. Créer un dossier `maximum`dans votre dossier `personnel` 
 2. Créer un projet console dans ce dossier, avec le code ci-dessus
 3. Faire un commit nommé `chore(exo maximum): Importer le code de base`
 4. Identifier la ou les variables mutables, puis trouver et implémenter une manière de n'avoir que des variables immutables **sans avoir recours à LinQ** (vous pouvez vous appuyer sur le fait que la liste aura toujours exactement 4 joueurs)
-5. Faire un commit nommé `refactor(exo maximum): Remplacer les variables mutables par des immutables`
+5. Faire un commit nommé `feat(exo maximum): Remplacer les variables mutables par des immutables`
 
+---
 
-## Variable globale
+## 2. Variable globale
 
-Le code ci-dessous n'a pas de véritable utilité
+Le code ci-dessous compile et s'éxécute mais quelquechose fait que son résultat laisse songeur...
+
+<details>
+<summary>Afficher/Masquer le code</summary>
 
 ```csharp
 using System;
@@ -128,3 +138,23 @@ class Program
 }
 
 ```
+
+</details>
+
+1. Rappatrier cet échantillon dans un nouveau projet
+2. Lancer son éxécution
+3. Constater le problème
+4. Annoter avec des commentaires partout où il faudrait faire des corrections
+5. git stage Program.cs && git commit -m "chore(comments): added comments to fix ..." (compléter les ...)
+
+**Ensuite,**
+
+### Option 1
+ - Créer un test d'integration (MSTest, XUNIT,...) piloté par du code qui ne passe pas (valeur finale incorrecte)
+ - Appliquer les corrections indiquées et vérifier que le test passe
+
+### Option 2
+Bypasser la première étape de l'option 1 et vérifier à la main ensuite
+
+**Puis**
+stage/add,commit, push

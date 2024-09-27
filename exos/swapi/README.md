@@ -8,7 +8,7 @@ Vous avez compris de quoi il s'agit ? Alors ... à vous jouer!
 
 ## Planète 1
 
-En vous aidant **uniquement** de ce site et de votre documentation personnelle (en d'autre termes **sans aucun recours** à une IA), écrivezun programme qui donne les réponses aux questions suivantes:
+En vous aidant **uniquement** de ce site et de votre documentation personnelle (en d'autre termes **sans aucun recours** à une IA), écrivez un programme qui donne les réponses aux questions suivantes:
 
 1. Quel est le film Star Wars dont le titre est le plus long ?
 2. Quel est le personnage qui est présent dans le plus de films ?

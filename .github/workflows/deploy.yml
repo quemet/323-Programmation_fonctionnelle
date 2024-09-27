@@ -32,23 +32,37 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0 # Not needed if lastUpdated is not enabled
-      # - uses: pnpm/action-setup@v3 # Uncomment this if you're using pnpm
-      # - uses: oven-sh/setup-bun@v1 # Uncomment this if you're using Bun
 
-      - name: configure repo URL
-        run: sed -i -e 's/{REPO}/${{ github.event.repository.name }}/g' .vitepress/config.mts
+      - uses: pnpm/action-setup@v3
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm # or pnpm / yarn
+          cache: pnpm #
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Install dependencies
-        run: npm ci # or pnpm install / yarn install / bun install
+        run: pnpm install
+      - name: check chrome for puppeteer
+        run: | 
+          pnpm exec puppeteer browsers install chrome@127.0.6533.88
+          pnpm exec puppeteer browsers install chrome
+          pnpm exec puppeteer browsers install chrome-headless-shell@127.0.6533.88
+          pnpm exec puppeteer browsers install chrome-headless-shell
+      
+      - name: configure repo URL
+        run: sed -i -e 's,{REPO_URL},${{ github.server_url }}/${{ github.repository }},g' .vitepress/config.mts
       - name: Build with VitePress
-        run: npm run docs:build # or pnpm docs:build / yarn docs:build / bun run docs:build
+        run: pnpm docs:build 
+
+      #- name: install chrome ext
+      #  run: node node_modules/puppeteer/install.js
+      
+      - name: Generate pdfs
+        run: pnpm pdf:lin
+        continue-on-error: true
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
