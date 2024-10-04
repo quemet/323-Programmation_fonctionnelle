@@ -190,7 +190,7 @@ int sum = numbers.Aggregate((current,next)=>current+next)
 Chaque élément est comparé à celui d'après et en résulte un seul élément défini par le lambda.
 Ainsi, à la fin de l'opération, *il ne doit en rester qu'un*...
 
-![Alt text](highlander.png)
+![Alt text](victory.webp)
 
 ### Réécriture de `Min`
 Avec l'accumulateur générique `Aggregate`, on peut réécrire le `Min` ainsi:
