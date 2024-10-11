@@ -10,7 +10,7 @@ export default defineConfig({
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: 'Home', link: '/' },
-      { text: 'Séquences', link: '/sequences' }
+      { text: 'Séquences', link: '/sequences/01.md' }
     ],
 
     sidebar: [
@@ -49,6 +49,5 @@ export default defineConfig({
   
   rewrites: {
     'README.md': 'index.md',
-    '(.*)/README.md': '(.*)/index.md',
   },
 })
