@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35303.130
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fractales3", "fractales3\fractales3.csproj", "{764FF615-1F37-4FD8-91E7-C0EF3372B295}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FracTest", "FracTest\FracTest.csproj", "{D1AE7C56-F8F9-443E-8F7C-892EFF534728}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{764FF615-1F37-4FD8-91E7-C0EF3372B295}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{764FF615-1F37-4FD8-91E7-C0EF3372B295}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{764FF615-1F37-4FD8-91E7-C0EF3372B295}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{764FF615-1F37-4FD8-91E7-C0EF3372B295}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1AE7C56-F8F9-443E-8F7C-892EFF534728}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1AE7C56-F8F9-443E-8F7C-892EFF534728}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1AE7C56-F8F9-443E-8F7C-892EFF534728}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1AE7C56-F8F9-443E-8F7C-892EFF534728}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {83D0100A-45DA-4C8F-9AAF-68DCC49674A0}
+	EndGlobalSection
+EndGlobal

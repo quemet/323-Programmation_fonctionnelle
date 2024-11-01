@@ -306,3 +306,272 @@ DessinerArbre(x_point_initial, y_point_initial, longueur_initiale, angle_initial
 Cette fractale est assez simple à implémenter et produit une forme intéressante avec des variations basées sur les
 angles et la profondeur. Vous pouvez également jouer avec les paramètres comme le facteur de réduction et l'angle de
 déviation pour créer des arbres plus denses ou plus fins...
+
+## Généralisation
+
+Vous êtes prêts à dessiner quasiment n'importe quelle fractale à base de lignes.
+
+Allons-y étape par étape.
+
+### Préparation: Dessiner une polyline
+
+Créez un nouveau projet selon les mêmes bases que ci-dessus.
+
+Utilisez le code qui sui pour obtenir le résultat ci-dessous:
+
+```csharp
+    public partial class Fractales : Form
+    {
+        private readonly int PANEL_WIDTH;
+        private readonly int PANEL_HEIGHT;
+
+        Graphics graphics;
+
+        // The first point of a pattern must always be (0,0)
+        Point[] pattern = new Point[4] { 
+            new Point(0, 0), 
+            new Point(10, 100), 
+            new Point(100, 10), 
+            new Point(200, 50) 
+        };
+
+        Pen pen = new Pen(Color.Red,3);
+
+
+        public Fractales()
+        {
+            InitializeComponent();
+            graphics = drawingPanel.CreateGraphics();
+            
+            // Initialize pannel dimensions
+            PANEL_WIDTH = drawingPanel.ClientSize.Width;        
+            PANEL_HEIGHT = drawingPanel.ClientSize.Height;
+        }
+
+        private void drawingPanel_Paint(object sender, PaintEventArgs e)
+        {
+            graphics.DrawLines(pen, pattern);
+        }
+    }
+```
+![](f3.base.png)
+
+### Etape 1: Coordonnées naturelles
+
+Il est beaucoup plus naturel d'avoir un système de coordonnées dont l'origine est en bas de l'écran.
+
+Ecrivez une méthode privée 
+
+```csharp
+        private Point[] VerticalFlip(Point[] points)
+```
+telle que lorsqu'on fait
+```csharp
+        graphics.DrawLines(pen, VerticalFlip(pattern));
+```
+on obtient:
+
+![](f3.step1.png)
+
+C'est cette ligne brisée - notre pattern - que vous allons fractaliser en remplaçant récursivement chacun des segments par notre pattern!
+
+### Etape 2: Dessiner n'importe où
+
+On veut maintenant pouvoir placer notre ligne n'importe où dans le panel.  
+On va donc la déplacer (translate)
+
+Ecrivez une méthode privée 
+
+```csharp
+        private Point[] MoveTo(Point[] points, Point basePoint)
+```
+
+telle que quand on fait :
+
+```csharp
+        graphics.DrawLines(pen, VerticalFlip(MoveTo(pattern, new Point (200,340))));
+        graphics.DrawLines(pen, VerticalFlip(MoveTo(pattern, new Point (20,110))));
+```
+
+on obtient:
+
+![](f3.step2.png)
+
+### Etape 3: Redimensionner
+
+On veut pouvoir changer la taille de notre pattern.
+
+Ecrivez une méthode privée 
+
+```csharp
+        private Point[] Resize(Point[] points, double factor)
+```
+
+telle que quand on fait :
+
+```csharp
+graphics.DrawLines(pen, VerticalFlip(MoveTo(Resize(pattern,0.3), new Point (200,340))));
+graphics.DrawLines(pen, VerticalFlip(MoveTo(Resize(pattern,1.5), new Point (20,110))));
+```
+
+on obtient:
+
+![](f3.step3.png)
+
+
+### Etape 4: Orienter
+
+On veut pouvoir changer l'orientation de notre pattern en faisant tourner chaque point d'un certain angle 
+
+Ecrivez une méthode privée 
+
+```csharp
+        private Point[] Rotate(Point[] points, int angle)
+```
+
+telle que quand on fait :
+
+```csharp
+for (int angle = 0; angle < 360; angle+=20)
+{
+    graphics.DrawLines(pen, 
+        VerticalFlip(MoveTo(Resize(Rotate(pattern,angle),0.3), new Point (200,340)))
+    );
+}
+```
+
+on obtient:
+
+![](f3.step4.png)
+
+### Etape 5: Le segment représentatif
+
+Lorsqu'on voudra "fractaliser" notre pattern, on devra remplacer chacun de se segments par le pattern lui-même. On se pose alors la question "comment faire correspondre une ligne brisée avec un segment ? La réponse est : grâce au segment représentatif.
+
+Pour faire simple, on va prendre comme segment représentatif de notre pattern le segment qui relie son premier et son dernier point.
+
+![](f3.Segment%20représentatif.png)
+
+On voit que ce dernier est également caractérisé par sa longueur et l'angle qu'il forme avec la verticale.
+
+Nous allons avoir besoin de calculer ces deux valeurs.
+
+Ecrivez deux méthodes
+
+```csharp
+    // Returns the angle in degrees of vector p1-p2 with a vertical line
+    public int Angle(Point p1, Point p2);
+    public double Length(Point p1, Point p2);
+```
+
+Vérifiez-les grâce au test unitaire suivant:
+
+```csharp
+[TestMethod]
+public void Test_angle_and_length()
+{
+    // Arrange
+    Point[] points = new Point[9] {
+        new Point(0, 0),
+        new Point(10, 100),
+        new Point(100, 10),
+        new Point(100,-10),
+        new Point(10, -100),
+        new Point(-10, -100),
+        new Point(-100, -10),
+        new Point(-100, 10),
+        new Point(-10, 100)
+    };
+    Fractales fractales = new Fractales();
+
+    // Act & Assert
+    Assert.AreEqual(6,fractales.Angle(points[0], points[1]));
+    Assert.AreEqual(84,fractales.Angle(points[0], points[2]));
+    Assert.AreEqual(96,fractales.Angle(points[0], points[3]));
+    Assert.AreEqual(174,fractales.Angle(points[0], points[4]));
+    Assert.AreEqual(-174,fractales.Angle(points[0], points[5]));
+    Assert.AreEqual(-96,fractales.Angle(points[0], points[6]));
+    Assert.AreEqual(-84,fractales.Angle(points[0], points[7]));
+    Assert.AreEqual(-6,fractales.Angle(points[0], points[8]));
+
+    Assert.AreEqual(100.5, Math.Round(fractales.Length(points[0], points[1]),2));
+    Assert.AreEqual(100.5, Math.Round(fractales.Length(points[0], points[2]),2));
+    Assert.AreEqual(100.5, Math.Round(fractales.Length(points[0], points[3]),2));
+    Assert.AreEqual(100.5, Math.Round(fractales.Length(points[0], points[4]),2));
+    Assert.AreEqual(100.5, Math.Round(fractales.Length(points[0], points[5]),2));
+    Assert.AreEqual(100.5, Math.Round(fractales.Length(points[0], points[6]),2));
+    Assert.AreEqual(100.5, Math.Round(fractales.Length(points[0], points[7]),2));
+    Assert.AreEqual(100.5, Math.Round(fractales.Length(points[0], points[8]),2));
+}
+
+```
+
+### Etape 6: Substituer le pattern à un segment
+
+Avec le calcul des angles, de la longueur et les méthode de rotation et redimensionnement, nous sommes armés pour l'étape suivante: positionner le segment représentatif du pattern sur n'importe quel segment.
+
+![](f3.step6.1%20objectif.png)
+
+Cela se fait en trois étapes:
+
+1. Rotation   
+   ![](f3.step6.2%20rotation.png)  
+   On sait faire, mais attention à bien calculer l'angle!
+2. Redimensionnement  
+   ![](f3.step6.3%20dimensions.png)  
+   On sait faire aussi !
+3. Positionnement  
+   ![](f3.step6.4%20translation.png)  
+
+En code, cela se traduit par le code suivant (à compléter)
+
+```csharp
+private Point[] FitPattern(Point[] pattern, Point start, Point end)
+{
+    // Compute the size ratio
+
+    // Compute the angle
+
+    // Do the job
+    return MoveTo(Resize(Rotate(pattern, angle), ratio), start);
+}
+```
+
+Utilisé ainsi:
+
+```csharp
+graphics.DrawLines(pen, VerticalFlip(FitPattern(pattern, new Point(40, 40), new Point(400, 40))));
+graphics.DrawLines(pen, VerticalFlip(FitPattern(pattern, new Point(400, 400), new Point(300, 300))));
+graphics.DrawLines(pen, VerticalFlip(FitPattern(pattern, new Point(20, 400), new Point(250, 300))));
+```
+
+cela donne:
+
+![](f3.step6.5%20result.png)
+
+### Etape 7: "Y'a plus qu'à..."
+
+Et voilà, on arrive au moment crucial avec tous les outils en mains.
+
+La "fractalisation" d'une liste de points avec notre pattern se résume à :
+
+1. Si le niveau de fractalisation (`depth`) est de 0 on stoppe la récursion en retournant la liste de points fournie sans modification
+2. Sinon, on retoure la liste des points constituée par tous les segments de la ligne donnée dans laquelle on a substitué chaque segment par le pattern
+
+Avec une profondeur de 9:
+
+```csharp
+graphics.DrawLines(pen, 
+    VerticalFlip(MoveTo(
+      Fractalize(pattern, 9),
+    new Point(PANEL_WIDTH/3,PANEL_HEIGHT/3))));
+```
+
+on obtient:
+
+![](f3.step7.png)
+
+ou en appliquant le même pattern avec une profondeur de 7 à la liste des points utilisés dans les tests unitaires:
+
+![](f3.step7b.png)
+

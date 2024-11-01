@@ -2,6 +2,7 @@ import { defineConfig } from 'vitepress'
 import {glob} from 'glob'
 import path from 'path'
 
+process.env.VITE_EXTRA_EXTENSIONS = 'docx,pdf'
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: "ICT-323 Fun",
